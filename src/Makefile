@@ -1,5 +1,5 @@
-obj-m += xt_tls.o
-xt_tls-objs := xt_tls_main.o hostset.o 
+obj-m := xt_tls.o
+xt_tls-y := xt_tls_main.o hostset.o 
 KERNEL_VERSION := $(shell uname -r)
 IDIR := /lib/modules/$(KERNEL_VERSION)/kernel/net/netfilter/
 KDIR := /lib/modules/$(KERNEL_VERSION)/build
@@ -7,13 +7,13 @@ DESTDIR ?= /
 PWD := $(shell pwd)
 VERSION := $(shell git rev-parse HEAD 2>/dev/null)
 default:
-	    $(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
+	    $(MAKE) -C $(KDIR) M=$(PWD) modules
 
 debug:
-	    $(MAKE) -C $(KDIR) SUBDIRS=$(PWD) CFLAGS_MODULE="-DXT_TLS_DEBUG" modules
+	    $(MAKE) -C $(KDIR) M=$(PWD) CFLAGS_MODULE="-DXT_TLS_DEBUG" modules
 
 install:
-	    $(MAKE) -C $(KDIR) SUBDIRS=$(PWD) INSTALL_MOD_PATH=$(DESTDIR) modules_install
+	    $(MAKE) -C $(KDIR) M=$(PWD) INSTALL_MOD_PATH=$(DESTDIR) modules_install
 	    depmod -a
 
 clean:
